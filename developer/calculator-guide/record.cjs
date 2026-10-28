@@ -7,10 +7,17 @@ const { spawn, spawnSync } = require('node:child_process');
 const { once } = require('node:events');
 const { createEmulator } = require('../tests/emulator-harness.cjs');
 const program = require('../native-calc/program.json');
-const scenes = require('./scenes.json');
+const locale = process.argv[2] || 'en';
+assert.ok(['en', 'pt-PT'].includes(locale), 'Use en or pt-PT as the locale');
+const portuguese = locale === 'pt-PT';
+const scenes = require(portuguese ? './scenes.pt-PT.json' : './scenes.json');
 const root = path.resolve(__dirname, '../..');
-const work = path.join(__dirname, '.render');
+const work = path.join(__dirname, '.render', ...(portuguese ? ['pt-PT'] : []));
 const output = path.join(root, 'Screenshots and Video');
+const fileStem = portuguese ? 'Guia da Calculadora - PT-PT' : 'Calculator Guide';
+const sample = portuguese
+    ? { item: 'ARTIGO', quantity: 'QTD', price: 'PRECO', first: 'CANETAS', second: 'CADERNOS', price1: '2,50', price2: '4,75', note: 'NOTA' }
+    : { item: 'ITEM', quantity: 'QTY', price: 'PRICE', first: 'PENS', second: 'NOTEBOOKS', price1: '2.50', price2: '4.75', note: 'NOTE' };
 const fps = 25;
 const chapters = [], keyEvents = [];
 let frame = 0, emulator, encoder, encoderDone, activeChapter;
@@ -80,6 +87,17 @@ async function hold(duration) {
     }
 }
 function keyLabel(label, duration = 1.15) {
+    if (portuguese) {
+        const translated = {
+            Down: 'Baixo', Up: 'Cima', Left: 'Esquerda', Right: 'Direita', CLICK: 'CLICAR',
+            'DRAG FILL HANDLE': 'ARRASTAR O CANTO', 'FX: EDIT': 'FX: EDITAR',
+            'CANCELAR: CANCEL': 'CANCELAR', 'GUARDAR: CONFIRM': 'GUARDAR: CONFIRMAR',
+            'LIMPAR: CLEAR': 'LIMPAR', 'NEXT COLUMNS': 'COLUNAS SEGUINTES',
+            'ABAIXO: DOWN 16': 'ABAIXO: 16 LINHAS', 'ACIMA: UP 16': 'ACIMA: 16 LINHAS',
+            'PREVIOUS COLUMNS': 'COLUNAS ANTERIORES', 'RETURN TO SHEET': 'VOLTAR À FOLHA', 'SAIR: EXIT': 'SAIR'
+        };
+        label = translated[label] || label.replace(/^TYPE /, 'ESCREVER ').replace(/^SELECT /, 'SELECIONAR ');
+    }
     const previous = keyEvents.at(-1);
     if (previous && previous.end > seconds()) previous.end = seconds();
     keyEvents.push({ start: seconds(), end: seconds() + duration, label });
@@ -173,9 +191,9 @@ function makeAssets() {
     function line(style, start, end, x, y, text, align = 7) {
         ass.push(`Dialogue: ${style === 'Keys' ? 5 : 1},${assTime(start)},${assTime(end)},${style},,0,0,0,,{\\an${align}\\pos(${x},${y})}${clean(text)}`);
     }
-    line('Brand', 0, duration, 96, 22, 'SPECTRUM CALC  /  HOW TO USE IT');
+    line('Brand', 0, duration, 96, 22, portuguese ? 'SPECTRUM CALC  /  GUIA DE UTILIZAÇÃO' : 'SPECTRUM CALC  /  HOW TO USE IT');
     chapters.forEach((ch, i) => {
-        line('Kicker', ch.start, ch.end, 48, 91, `STEP ${String(i + 1).padStart(2, '0')}`);
+        line('Kicker', ch.start, ch.end, 48, 91, `${portuguese ? 'PASSO' : 'STEP'} ${String(i + 1).padStart(2, '0')}`);
         line('Title', ch.start, ch.end, 48, 126, wrap(ch.title, 20));
         line('Body', ch.start, ch.end, 48, 238, ch.body);
         line('Code', ch.start, ch.end, 48, 477, ch.code);
@@ -211,9 +229,15 @@ function makeAssets() {
     header.writeUInt16LE(2, 32); header.writeUInt16LE(16, 34); header.write('data', 36); header.writeUInt32LE(pcm.length, 40);
     fs.writeFileSync(path.join(work, 'narration.wav'), Buffer.concat([header, pcm]));
     fs.writeFileSync(path.join(work, 'guide.ass'), ass.join('\n'));
-    fs.writeFileSync(path.join(output, 'Calculator Guide.srt'), srt.join('\n'));
-    fs.writeFileSync(path.join(output, 'Calculator Guide - Transcript.txt'), 'SPECTRUM CALC - HOW TO USE IT\nEnglish narration; recorded from the actual Z80 Calculator.\n\n' + chapters.map(ch => `${srtTime(ch.start).slice(0, 8)}  ${ch.title}\n${ch.speech.join(' ')}\n`).join('\n'));
-    fs.writeFileSync(path.join(work, 'chapters.ffmeta'), ';FFMETADATA1\ntitle=Spectrum Calc - How to use the Calculator\ncomment=English narration and captions. Actual emulator interactions.\n' + chapters.map(ch => `[CHAPTER]\nTIMEBASE=1/1000\nSTART=${Math.round(ch.start * 1000)}\nEND=${Math.round(ch.end * 1000)}\ntitle=${ch.title}\n`).join(''));
+    fs.writeFileSync(path.join(output, `${fileStem}.srt`), srt.join('\n'));
+    const transcriptHeader = portuguese
+        ? 'SPECTRUM CALC - GUIA DE UTILIZAÇÃO\nNarração e legendas em português de Portugal; voz Microsoft Hélia (pt-PT).\nGravado a partir da Calculadora Z80 real.\n\n'
+        : 'SPECTRUM CALC - HOW TO USE IT\nEnglish narration; recorded from the actual Z80 Calculator.\n\n';
+    fs.writeFileSync(path.join(output, `${fileStem}${portuguese ? ' - Transcricao' : ' - Transcript'}.txt`), transcriptHeader + chapters.map(ch => `${srtTime(ch.start).slice(0, 8)}  ${ch.title}\n${ch.speech.join(' ')}\n`).join('\n'));
+    const metadataHeader = portuguese
+        ? ';FFMETADATA1\ntitle=Spectrum Calc - Guia da Calculadora (Portugal)\ncomment=Narração e legendas em português de Portugal (pt-PT). Voz Microsoft Hélia.\n'
+        : ';FFMETADATA1\ntitle=Spectrum Calc - How to use the Calculator\ncomment=English narration and captions. Actual emulator interactions.\n';
+    fs.writeFileSync(path.join(work, 'chapters.ffmeta'), metadataHeader + chapters.map(ch => `[CHAPTER]\nTIMEBASE=1/1000\nSTART=${Math.round(ch.start * 1000)}\nEND=${Math.round(ch.end * 1000)}\ntitle=${ch.title}\n`).join(''));
     const filter = "[0:v]scale=768:576:flags=neighbor,pad=1280:720:456:72:color=0x10161e,drawbox=x=448:y=64:w=784:h=592:color=0x556779:t=2,drawbox=x=48:y=64:w=1184:h=1:color=0x293848:t=fill,drawbox=x=48:y=21:w=7:h=22:color=0xf16365:t=fill,drawbox=x=57:y=21:w=7:h=22:color=0xf2d764:t=fill,drawbox=x=66:y=21:w=7:h=22:color=0x77cb91:t=fill,drawbox=x=75:y=21:w=7:h=22:color=0x6dc9e5:t=fill,ass=guide.ass[v]";
     fs.writeFileSync(path.join(work, 'layout.ffscript'), filter);
     fs.writeFileSync(path.join(work, 'timing.json'), JSON.stringify({ duration, chapters: chapters.map(({ title, start, end }) => ({ title, start, end })) }, null, 2));
@@ -228,8 +252,8 @@ async function main() {
     encoder.stdin.on('error', () => {});
     await scene(0, async () => { await cue(1); await press('ArrowDown'); await hold(0.7); await press('ArrowDown'); await hold(1); await press('Enter'); await advance(35); assert.equal(byte(program.ready), 1); });
     await scene(1, async () => { await select(2, 2); await hold(2); await press('ArrowLeft'); await hold(1); await press('Tab'); await hold(1); await select(0, 0); });
-    await scene(2, async () => { await put(0, 0, 'ITEM'); await put(0, 1, 'QTY'); await put(0, 2, 'PRICE'); await put(0, 3, 'TOTAL'); });
-    await scene(3, async () => { await put(1, 0, 'PENS'); await put(1, 1, '3'); await put(1, 2, '2.50'); await cue(1); await put(2, 0, 'NOTEBOOKS'); await put(2, 1, '2'); await put(2, 2, '4.75'); });
+    await scene(2, async () => { await put(0, 0, sample.item); await put(0, 1, sample.quantity); await put(0, 2, sample.price); await put(0, 3, 'TOTAL'); });
+    await scene(3, async () => { await put(1, 0, sample.first); await put(1, 1, '3'); await put(1, 2, sample.price1); await cue(1); await put(2, 0, sample.second); await put(2, 1, '2'); await put(2, 2, sample.price2); });
     await scene(4, async () => { await put(1, 3, '=B2*C2'); await select(1, 3); });
     await scene(5, async () => {
         await select(1, 3); await movePointer(238, 54); await hold(1);
@@ -242,7 +266,7 @@ async function main() {
         await select(1, 1); await click(120, 12, 'FX: EDIT'); await press('Backspace'); await type('9'); await cue(1, 3); await click(64, 28, 'CANCELAR: CANCEL'); assert.equal(raw(1, 1), '3');
         await cue(2); await press('Enter'); await press('Backspace'); await type('4'); await click(20, 28, 'GUARDAR: CONFIRM'); assert.equal(raw(1, 1), '4'); await select(3, 3);
     });
-    await scene(8, async () => { await put(5, 0, 'NOTE'); await select(5, 0); await hold(1); await click(64, 28, 'LIMPAR: CLEAR'); assert.equal(raw(5, 0), ''); });
+    await scene(8, async () => { await put(5, 0, sample.note); await select(5, 0); await hold(1); await click(64, 28, 'LIMPAR: CLEAR'); assert.equal(raw(5, 0), ''); });
     await scene(9, async () => {
         await cue(1);
         await click(36, 172, 'NEXT COLUMNS'); await hold(2); assert.equal(byte(program.left), 4);
@@ -261,8 +285,8 @@ async function main() {
     encoder.stdin.end(); const [code] = await encoderDone; fs.closeSync(encodeLog); assert.equal(code, 0, 'Screen encoding failed');
     makeAssets();
     console.log(`Compositing ${seconds().toFixed(1)} seconds of 720p video with narration, captions and chapters...`);
-    const result = spawnSync('ffmpeg', ['-hide_banner', '-loglevel', 'warning', '-y', '-i', 'screen.mkv', '-i', 'narration.wav', '-f', 'ffmetadata', '-i', 'chapters.ffmeta', '-filter_complex_script', 'layout.ffscript', '-map', '[v]', '-map', '1:a:0', '-map_metadata', '2', '-map_chapters', '2', '-c:v', 'libx264', '-crf', '18', '-preset', 'medium', '-pix_fmt', 'yuv420p', '-r', String(fps), '-c:a', 'aac', '-b:a', '128k', '-movflags', '+faststart', '-t', seconds().toFixed(2), path.join(output, 'Calculator Guide.mp4')], { cwd: work, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8', windowsHide: true });
+    const result = spawnSync('ffmpeg', ['-hide_banner', '-loglevel', 'warning', '-y', '-i', 'screen.mkv', '-i', 'narration.wav', '-f', 'ffmetadata', '-i', 'chapters.ffmeta', '-filter_complex_script', 'layout.ffscript', '-map', '[v]', '-map', '1:a:0', '-map_metadata', '2', '-map_chapters', '2', '-metadata:s:a:0', `language=${portuguese ? 'por' : 'eng'}`, '-metadata:s:a:0', `title=${portuguese ? 'Português (Portugal)' : 'English'}`, '-c:v', 'libx264', '-crf', '18', '-preset', 'medium', '-pix_fmt', 'yuv420p', '-r', String(fps), '-c:a', 'aac', '-b:a', '128k', '-movflags', '+faststart', '-t', seconds().toFixed(2), path.join(output, `${fileStem}.mp4`)], { cwd: work, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8', windowsHide: true });
     fs.writeFileSync(path.join(work, 'render.log'), result.stderr || ''); assert.equal(result.status, 0, result.stderr);
-    console.log(`Created ${path.join(output, 'Calculator Guide.mp4')}`);
+    console.log(`Created ${path.join(output, `${fileStem}.mp4`)}`);
 }
 main().catch(error => { console.error(error); encoder?.kill(); process.exitCode = 1; });

@@ -1,0 +1,253 @@
+1
+00:00:00,450 --> 00:00:09,537
+Abra o ficheiro index ponto H T M L no navegador,
+escolha Start 128 K e clique no ecrã para poder usar o
+
+2
+00:00:09,537 --> 00:00:09,932
+teclado.
+
+3
+00:00:10,152 --> 00:00:19,136
+No menu do Spectrum, prima duas vezes a seta para baixo,
+até selecionar Calculator. Depois, prima Enter.
+
+4
+00:00:20,730 --> 00:00:28,295
+Cada quadrado é uma célula. Clique numa célula, ou use
+as teclas de direção, para a selecionar. Os
+
+5
+00:00:28,295 --> 00:00:32,497
+cabeçalhos a azul-claro indicam a linha e a coluna
+atuais.
+
+6
+00:00:32,717 --> 00:00:41,203
+A barra F X mostra o conteúdo da célula selecionada. Na
+barra de ferramentas encontra os botões Editar,
+
+7
+00:00:41,203 --> 00:00:43,560
+Limpar, Copiar, Ajuda e Sair.
+
+8
+00:00:44,770 --> 00:00:52,053
+Vamos criar uma pequena lista de compras. Escreva Artigo
+em A um, a abreviatura Q T D em B um, Preço em C
+
+9
+00:00:52,053 --> 00:00:53,953
+um e Total em D um.
+
+10
+00:00:54,173 --> 00:01:01,551
+Basta começar a escrever para iniciar uma nova entrada.
+Prima Enter para confirmar o conteúdo e passar à
+
+11
+00:01:01,551 --> 00:01:02,371
+linha seguinte.
+
+12
+00:01:10,090 --> 00:01:17,480
+Na primeira linha de artigos, escreva Canetas em A dois,
+a quantidade três em B dois e o preço dois
+
+13
+00:01:17,480 --> 00:01:19,328
+vírgula cinquenta em C dois.
+
+14
+00:01:19,548 --> 00:01:27,051
+Na linha três, escreva Cadernos, a quantidade dois e o
+preço quatro vírgula setenta e cinco.
+
+15
+00:01:27,271 --> 00:01:34,910
+Nos valores decimais, tanto pode usar vírgula como
+ponto. Neste exemplo, usamos vírgulas.
+
+16
+00:01:47,410 --> 00:01:57,704
+Selecione D dois e escreva igual a B dois, asterisco, C
+dois. O asterisco serve para multiplicar. Depois,
+
+17
+00:01:57,704 --> 00:01:58,848
+prima Enter.
+
+18
+00:01:59,068 --> 00:02:06,880
+O resultado é sete vírgula cinco. No ecrã, os resultados
+usam ponto decimal. Volte a selecionar D dois
+
+19
+00:02:06,880 --> 00:02:13,390
+para ver a fórmula na barra F X. As fórmulas começam
+pelo sinal de igual.
+
+20
+00:02:14,610 --> 00:02:21,634
+Selecione D dois. Arraste o pequeno quadrado do canto
+inferior direito da célula até D três e largue o
+
+21
+00:02:21,634 --> 00:02:22,743
+botão do rato.
+
+22
+00:02:22,963 --> 00:02:30,903
+A fórmula copiada passa a multiplicar B três por C três,
+dando nove vírgula cinco. As referências
+
+23
+00:02:30,903 --> 00:02:36,975
+relativas ajustam-se automaticamente. A cópia substitui
+o conteúdo que já exista no destino.
+
+24
+00:02:38,210 --> 00:02:48,615
+Escreva o título Total em C quatro. Em D quatro,
+introduza igual a SUM, abre parênteses, D dois, dois
+
+25
+00:02:48,615 --> 00:02:51,353
+pontos, D três, fecha parênteses.
+
+26
+00:02:51,573 --> 00:02:59,266
+Esta fórmula soma os dois totais e dá dezassete. A
+célula da soma deve ficar fora do próprio intervalo,
+
+27
+00:02:59,266 --> 00:03:01,290
+para evitar uma referência circular.
+
+28
+00:03:02,530 --> 00:03:10,461
+Para alterar o conteúdo existente, selecione a célula e
+clique na barra F X ou no botão Editar. A tecla
+
+29
+00:03:10,461 --> 00:03:12,048
+Backspace apaga um caráter.
+
+30
+00:03:12,268 --> 00:03:20,689
+A barra amarela mostra a alteração em curso. O botão
+Cancelar, ou a tecla Escape, anula a edição.
+
+31
+00:03:20,689 --> 00:03:25,835
+Primeiro, vamos cancelar uma alteração de teste,
+mantendo o valor original.
+
+32
+00:03:26,055 --> 00:03:33,602
+Agora altere B dois de três para quatro e escolha
+Guardar. As fórmulas são recalculadas e o total geral
+
+33
+00:03:33,602 --> 00:03:35,588
+passa a dezanove vírgula cinco.
+
+34
+00:03:36,810 --> 00:03:44,351
+Para apagar o conteúdo de uma célula, selecione-a e
+clique em Limpar, ou prima Delete. Neste exemplo,
+
+35
+00:03:44,351 --> 00:03:48,787
+escrevemos uma nota temporária em A seis e depois
+apagamo-la.
+
+36
+00:03:49,007 --> 00:03:56,144
+A lista de compras e as fórmulas mantêm-se. Confirme
+sempre o endereço da célula selecionada antes de a
+
+37
+00:03:56,144 --> 00:03:56,540
+limpar.
+
+38
+00:03:57,770 --> 00:04:07,586
+A folha tem oito colunas, de A a H, e sessenta e quatro
+linhas. De cada vez, são visíveis quatro colunas e
+
+39
+00:04:07,586 --> 00:04:08,478
+dezasseis linhas.
+
+40
+00:04:08,698 --> 00:04:15,949
+Use os controlos por baixo da grelha para mudar de
+colunas ou avançar dezasseis linhas. Acima permite
+
+41
+00:04:15,949 --> 00:04:20,215
+subir e Abaixo permite descer. Os dados mantêm-se
+enquanto navega.
+
+42
+00:04:25,450 --> 00:04:33,498
+Para copiar pelo teclado, selecione a célula de origem e
+prima F cinco. Use as setas para escolher o canto
+
+43
+00:04:33,498 --> 00:04:37,522
+final do destino. Enter aplica a cópia e Escape
+cancela-a.
+
+44
+00:04:37,742 --> 00:04:45,016
+Primeiro cancelamos; depois repetimos e aplicamos.
+Também pode usar Copiar, clicar no destino e escolher
+
+45
+00:04:45,016 --> 00:04:51,320
+Aplicar. Os cifrões mantêm as referências fixas, como em
+cifrão A cifrão um.
+
+46
+00:04:52,530 --> 00:05:02,014
+Prima F quatro, ou clique em Ajuda, para consultar as
+fórmulas disponíveis. Encontra SUM, AVERAGE, MIN,
+
+47
+00:05:02,014 --> 00:05:04,978
+MAX e COUNT, com exemplos.
+
+48
+00:05:05,198 --> 00:05:12,747
+Os nomes das funções são escritos em inglês. Para voltar
+à folha, prima Enter ou Escape, ou clique no
+
+49
+00:05:12,747 --> 00:05:14,336
+botão na parte inferior.
+
+50
+00:05:15,570 --> 00:05:22,645
+Clique em Sair, ou prima Escape quando não estiver a
+editar, para voltar ao menu do Spectrum. Reabra
+
+51
+00:05:22,645 --> 00:05:27,362
+Calculator para continuar com os mesmos dados, na mesma
+sessão do navegador.
+
+52
+00:05:27,582 --> 00:05:34,879
+Mantenha a página aberta. Recarregar ou fechar a página
+apaga a folha. Esta versão não guarda ficheiros
+
+53
+00:05:34,879 --> 00:05:40,460
+nem exporta C S V. O botão Guardar apenas confirma a
+célula atual.
+
+54
+00:05:40,680 --> 00:05:44,478
+Já pode começar a criar a sua própria folha de cálculo.

@@ -1,0 +1,42 @@
+SPECTRUM CALC - GUIA DE UTILIZAÇÃO
+Narração e legendas em português de Portugal; voz Microsoft Hélia (pt-PT).
+Gravado a partir da Calculadora Z80 real.
+
+00:00:00  Abrir a calculadora
+Abra o ficheiro index ponto H T M L no navegador, escolha Start 128 K e clique no ecrã para poder usar o teclado. No menu do Spectrum, prima duas vezes a seta para baixo, até selecionar Calculator. Depois, prima Enter.
+
+00:00:20  Conhecer a folha
+Cada quadrado é uma célula. Clique numa célula, ou use as teclas de direção, para a selecionar. Os cabeçalhos a azul-claro indicam a linha e a coluna atuais. A barra F X mostra o conteúdo da célula selecionada. Na barra de ferramentas encontra os botões Editar, Limpar, Copiar, Ajuda e Sair.
+
+00:00:44  Escrever os títulos
+Vamos criar uma pequena lista de compras. Escreva Artigo em A um, a abreviatura Q T D em B um, Preço em C um e Total em D um. Basta começar a escrever para iniciar uma nova entrada. Prima Enter para confirmar o conteúdo e passar à linha seguinte.
+
+00:01:09  Introduzir valores
+Na primeira linha de artigos, escreva Canetas em A dois, a quantidade três em B dois e o preço dois vírgula cinquenta em C dois. Na linha três, escreva Cadernos, a quantidade dois e o preço quatro vírgula setenta e cinco. Nos valores decimais, tanto pode usar vírgula como ponto. Neste exemplo, usamos vírgulas.
+
+00:01:46  Calcular um total
+Selecione D dois e escreva igual a B dois, asterisco, C dois. O asterisco serve para multiplicar. Depois, prima Enter. O resultado é sete vírgula cinco. No ecrã, os resultados usam ponto decimal. Volte a selecionar D dois para ver a fórmula na barra F X. As fórmulas começam pelo sinal de igual.
+
+00:02:14  Copiar uma fórmula
+Selecione D dois. Arraste o pequeno quadrado do canto inferior direito da célula até D três e largue o botão do rato. A fórmula copiada passa a multiplicar B três por C três, dando nove vírgula cinco. As referências relativas ajustam-se automaticamente. A cópia substitui o conteúdo que já exista no destino.
+
+00:02:37  Somar os totais
+Escreva o título Total em C quatro. Em D quatro, introduza igual a SUM, abre parênteses, D dois, dois pontos, D três, fecha parênteses. Esta fórmula soma os dois totais e dá dezassete. A célula da soma deve ficar fora do próprio intervalo, para evitar uma referência circular.
+
+00:03:02  Editar ou cancelar
+Para alterar o conteúdo existente, selecione a célula e clique na barra F X ou no botão Editar. A tecla Backspace apaga um caráter. A barra amarela mostra a alteração em curso. O botão Cancelar, ou a tecla Escape, anula a edição. Primeiro, vamos cancelar uma alteração de teste, mantendo o valor original. Agora altere B dois de três para quatro e escolha Guardar. As fórmulas são recalculadas e o total geral passa a dezanove vírgula cinco.
+
+00:03:36  Limpar uma célula
+Para apagar o conteúdo de uma célula, selecione-a e clique em Limpar, ou prima Delete. Neste exemplo, escrevemos uma nota temporária em A seis e depois apagamo-la. A lista de compras e as fórmulas mantêm-se. Confirme sempre o endereço da célula selecionada antes de a limpar.
+
+00:03:57  Navegar pela folha
+A folha tem oito colunas, de A a H, e sessenta e quatro linhas. De cada vez, são visíveis quatro colunas e dezasseis linhas. Use os controlos por baixo da grelha para mudar de colunas ou avançar dezasseis linhas. Acima permite subir e Abaixo permite descer. Os dados mantêm-se enquanto navega.
+
+00:04:25  Copiar pelo teclado
+Para copiar pelo teclado, selecione a célula de origem e prima F cinco. Use as setas para escolher o canto final do destino. Enter aplica a cópia e Escape cancela-a. Primeiro cancelamos; depois repetimos e aplicamos. Também pode usar Copiar, clicar no destino e escolher Aplicar. Os cifrões mantêm as referências fixas, como em cifrão A cifrão um.
+
+00:04:52  Consultar a ajuda
+Prima F quatro, ou clique em Ajuda, para consultar as fórmulas disponíveis. Encontra SUM, AVERAGE, MIN, MAX e COUNT, com exemplos. Os nomes das funções são escritos em inglês. Para voltar à folha, prima Enter ou Escape, ou clique no botão na parte inferior.
+
+00:05:15  Sair e regressar
+Clique em Sair, ou prima Escape quando não estiver a editar, para voltar ao menu do Spectrum. Reabra Calculator para continuar com os mesmos dados, na mesma sessão do navegador. Mantenha a página aberta. Recarregar ou fechar a página apaga a folha. Esta versão não guarda ficheiros nem exporta C S V. O botão Guardar apenas confirma a célula atual. Já pode começar a criar a sua própria folha de cálculo.
