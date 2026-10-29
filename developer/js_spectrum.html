@@ -333,6 +333,12 @@ let audioMuted = false;
 let audioUnavailable = false;
 let nextAudioTime = 0;
 const AUDIO_SAMPLE_RATE = 44100;
+const AUDIO_SCHEDULE_LEAD = 0.04;
+// Keep the existing two-frame pacing allowance in addition to the startup lead.
+const AUDIO_MAX_AHEAD = AUDIO_SCHEDULE_LEAD + 0.04;
+const AUDIO_DC_R = Math.exp(-2 * Math.PI * 20 / AUDIO_SAMPLE_RATE);
+let audioPreviousInput = 0;
+let audioPreviousOutput = 0;
 let speakerLog = [];
 let lastSpeakerState = 0;
 let ayLog = [];
@@ -498,7 +504,13 @@ function synthesizeAudioFrame(log, ayEvents = ayLog) {
             ayTime = Math.max(ayTime, event.t);
         }
         const ayOutput = ayChip.sample(Math.max(0, currentT - ayTime));
-        data[i] = (currentSpeaker ? 0.5 : -0.5) + ayOutput * 0.5;
+        // Off is zero; 0 -> 1 retains the old beeper's unit transition amplitude.
+        // Block DC from the combined signal, carrying history across frame gaps.
+        const input = (currentSpeaker ? 1 : 0) + ayOutput * 0.5;
+        const output = input - audioPreviousInput + AUDIO_DC_R * audioPreviousOutput;
+        audioPreviousInput = input;
+        audioPreviousOutput = Math.abs(output) < 1e-8 ? 0 : output;
+        data[i] = audioPreviousOutput;
     }
     // Writes in an instruction crossing the frame boundary belong to its end.
     while (ayIdx < ayEvents.length) {
@@ -512,7 +524,11 @@ function synthesizeAudioFrame(log, ayEvents = ayLog) {
 
 function processAudioFrame(log) {
     const data = synthesizeAudioFrame(log);
-    if (!audioCtx || audioCtx.state !== 'running') return;
+    if (!audioCtx || audioCtx.state !== 'running') {
+        // Keep emulating the chip, but re-prime scheduling when audio resumes.
+        nextAudioTime = 0;
+        return;
+    }
     const buffer = audioCtx.createBuffer(1, data.length, AUDIO_SAMPLE_RATE);
     buffer.getChannelData(0).set(data);
 
@@ -520,8 +536,9 @@ function processAudioFrame(log) {
     source.buffer = buffer;
     source.connect(audioGain);
 
-    // Tight Sync: If we fell behind, jump to now.
-    if (nextAudioTime < audioCtx.currentTime) nextAudioTime = audioCtx.currentTime;
+    // Prime startup/underrun recovery with a cushion; otherwise stay contiguous.
+    const now = audioCtx.currentTime;
+    if (nextAudioTime <= now) nextAudioTime = now + AUDIO_SCHEDULE_LEAD;
 
     source.start(nextAudioTime);
     nextAudioTime += buffer.duration;
@@ -1070,6 +1087,8 @@ function resetSystem() {
     ayLog = [];
     speakerLog = [];
     lastSpeakerState = 0;
+    audioPreviousInput = 0;
+    audioPreviousOutput = 0;
     nextAudioTime = audioCtx ? audioCtx.currentTime : 0;
     releaseAllKeys();
     isRunning = true;
@@ -1168,11 +1187,9 @@ function handleNativeCalcKey(event, pressed) {
 function loop() {
     if (!isRunning) return;
 
-    // --- AUDIO SYNC LOCK ---
-    // If we have audio enabled, we MUST NOT run faster than the audio hardware.
-    // If the next audio chunk is scheduled > 40ms in the future, we are running too fast.
-    // We skip this visual frame to let the audio "catch up".
-    if (audioCtx && audioCtx.state === 'running' && (nextAudioTime - audioCtx.currentTime) > 0.04) {
+    // Pace CPU frames against running audio, retaining the scheduling cushion.
+    // Suspended audio has a frozen clock and must never stall CPU execution.
+    if (audioCtx && audioCtx.state === 'running' && (nextAudioTime - audioCtx.currentTime) > AUDIO_MAX_AHEAD) {
         animationFrameId = requestAnimationFrame(loop);
         return;
     }
